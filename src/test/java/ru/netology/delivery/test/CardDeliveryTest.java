@@ -1,7 +1,7 @@
 package ru.netology.delivery.test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.Keys;
 import ru.netology.delivery.data.DataGenerator;
 
@@ -12,9 +12,13 @@ import static com.codeborne.selenide.Selenide.*;
 
 class CardDeliveryTest {
 
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
     @BeforeEach
-    void setUpAll() {
-        open("http://localhost:7777/");
+    void setUp() {
+        open("http://localhost:9999/");
     }
 
     @Test
@@ -45,5 +49,9 @@ class CardDeliveryTest {
         $("[data-test-id=replan-notification] button").click();
         $("[data-test-id=success-notification]")
                 .shouldHave(matchText("Встреча успешно запланирована на " + secondMeetingDate));
+    }
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
     }
 }
